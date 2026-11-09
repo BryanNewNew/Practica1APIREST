@@ -14,8 +14,8 @@ namespace MiniSuper1.Controllers
     {
         private static List<ProductoEntity> _productos = new()
         {
-            new ProductoEntity { Nombre = "Leche", Precio = 2.50m, Stock = 100},
-            new ProductoEntity { Nombre = "Pan", Precio = 1.20m, Stock = 50}
+            new ProductoEntity { Id = 000001, Nombre = "Leche", Precio = 2.50m, Stock = 100},
+            new ProductoEntity { Id = 000002, Nombre = "Pan", Precio = 1.20m, Stock = 50}
         };
 
         [HttpGet]
@@ -27,7 +27,7 @@ namespace MiniSuper1.Controllers
 
         [HttpGet("{id}")]
 
-        public IActionResult GetbyId(Guid id)
+        public IActionResult GetbyId(int id)
         {
             var producto = _productos.FirstOrDefault(p=> p.Id == id);
             if(producto == null)
@@ -55,7 +55,7 @@ namespace MiniSuper1.Controllers
 
         [HttpPut("{id}")]
 
-        public IActionResult Update(Guid id, [FromBody] ProductoEntity producto)
+        public IActionResult Update(int id, [FromBody] ProductoEntity producto)
         {
             var productoAnterior = _productos.FirstOrDefault(p=> p.Id == id);
             if(productoAnterior == null)

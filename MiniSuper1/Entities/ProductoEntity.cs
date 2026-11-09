@@ -7,7 +7,7 @@ namespace MiniSuper1.Entities
 {
     public class ProductoEntity
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? Nombre { get; set; }
         public decimal Precio { get; set; }
 
