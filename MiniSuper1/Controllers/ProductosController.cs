@@ -72,6 +72,19 @@ namespace MiniSuper1.Controllers
             return Ok(producto);
 
         }
+
+        [HttpDelete("{id}")]
+
+        public IActionResult Delete(int id)
+        {
+            var productoAnterior = _productos.FirstOrDefault(p=> p.Id == id);
+            if(productoAnterior == null)
+            {
+                return NotFound();//Esto es para indicar que no se encontró el producto con el id especificado
+            }
+            _productos.Remove(productoAnterior);
+            return NoContent(); //Esto es para indicar que la solicitud se ha procesado correctamente pero no hay contenido que devolver
+        }
     }
 
 }
