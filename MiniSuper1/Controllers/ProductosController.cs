@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MiniSuper1.Dtos;
+using MiniSuper1.Dtos.Productos;
 using MiniSuper1.Entities;
 
 namespace MiniSuper1.Controllers
@@ -68,21 +69,27 @@ namespace MiniSuper1.Controllers
 
         [HttpPut("{id}")]
 
-        public IActionResult Update(int id, [FromBody] ProductoEntity producto)
+        public IActionResult Update(int id, [FromBody] ProductosUpdateDto dto)
         {
+             if(dto == null)
+            {
+                return BadRequest("Los datos son obligatorios");//Esto es para indicar que no se encontró el producto con el id especificado
+            }
+            //Busca el producto
             var productoAnterior = _productos.FirstOrDefault(p=> p.Id == id);
             if(productoAnterior == null)
             {
-                return NotFound();//Esto es para indicar que no se encontró el producto con el id especificado
+                return NotFound("No existe");
             }
-            if(producto == null)
-            {
-                return BadRequest(); //Esto es para indicar que la solicitud no es válida ya que no existe un producto con ese id
-            }
-            _productos.Remove(productoAnterior);
-            _productos.Add(producto);
+
+            //Se modifica el dto de una sola vez sin necesidad de un objeto ya que al modificar este como
+            //la entidad ya esta conectada en el create esa función se encarga de esa 
+            productoAnterior.Nombre = dto.Nombre;
+            productoAnterior.Precio = dto.Precio;
+            productoAnterior.Stock = dto.Stock;
+
             //return NoContent(); Esto es para indicar que la solicitud se ha procesado correctamente pero no hay contenido que devolver
-            return Ok(producto);
+            return Ok(productoAnterior);
 
         }
 
