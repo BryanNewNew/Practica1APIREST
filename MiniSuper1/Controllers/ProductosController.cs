@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MiniSuper1.Dtos;
 using MiniSuper1.Entities;
 
 namespace MiniSuper1.Controllers
 {
     [Route("api/productos")]
         [ApiController]
-
     public class ProductosController : ControllerBase
     {
         private static List<ProductoEntity> _productos = new()
@@ -40,16 +40,29 @@ namespace MiniSuper1.Controllers
 
         [HttpPost]
 
-        public IActionResult Create([FromBody] ProductoEntity producto/*Esta es una variable local*/)
+        public IActionResult Create([FromBody] ProductosCreateDto dto/*Se crea un dto para luego mapear a la entidad*/)
         {
-            if(producto == null)
+            //Las verificaciones siempre van primero
+             if(dto == null)//Se debe validar que el dto no sea nulo, ya que si es nulo no se puede mapear a la entidad
+            //La variable producto es una variable local que se crea para mapear el dto a la entidad,
+            //ya que el dto no tiene el mismo nombre de las propiedades que la entidad
             {
-                return BadRequest();
+                return BadRequest("Los datos son obligatorios");
             }
             
-            _productos.Add(producto);
+            //Pasamos los datos del Dto a la entidad
+            var producto = new ProductoEntity{
+                Id = dto.Id,
+                Nombre = dto.Nombre,
+                Precio = dto.Precio,
+                Stock = dto.Stock
+            };//Se crea una variable local para mapear el dto a la entidad,
+            //Siempre es obligatorio mapear la entidad
+             _productos.Add(producto);
 
-            return CreatedAtAction(nameof(GetAll), new { id = producto.Id }, producto);
+            return CreatedAtAction(nameof(GetAll)/*Esto solo es para indicar la acción que se debe llamar en la url */,
+             new { id = producto.Id }/*Y este objeto contiene los parámetros para la acción, solo se lo indica a la url*/,
+            producto/*Devuelve el producto creado*/);
 
         }
 
@@ -85,6 +98,6 @@ namespace MiniSuper1.Controllers
             _productos.Remove(productoAnterior);
             return NoContent(); //Esto es para indicar que la solicitud se ha procesado correctamente pero no hay contenido que devolver
         }
+        
     }
-
 }
